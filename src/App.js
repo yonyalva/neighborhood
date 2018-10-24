@@ -4,6 +4,13 @@ import './App.css';
 import {load_google_maps} from './components/script'
  
 class App extends Component {
+	
+	constructor(props) {
+		super(props);
+		this.state = {
+			query: ''
+		}
+	}
 
 	componentDidMount() {
 		let googleMapsPromise = load_google_maps ();
@@ -67,12 +74,23 @@ class App extends Component {
 
 		})
 	}
+	
+	filterVeues(query) {
+		console.log(query);
+	}
   render() {
     return (
-      <div id="map">
-        
-      </div>
+		<div>
+			<div className='options-box'>
 
+				<input value={this.state.query} onChange={(e) => {this.filterVeues(e.target.value)}}/>
+				<input id='hide-listings' type='button' value='Hide Listings'></input>
+			</div>
+
+			<div id="map">
+        
+			</div>
+	 </div>
     );
   }
 }
