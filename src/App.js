@@ -21,7 +21,7 @@ class App extends Component {
 			
 				  let google = values[0];
 					this.google = values;
-				//	this.markers = [];
+				    this.markers = [];
 					let map;
 
 					map = new google.maps.Map(document.getElementById('map'), {
@@ -29,7 +29,7 @@ class App extends Component {
 						zoom: 13
 					});
 
-					var locations = [
+					let locations = [
 						{title: 'La Mexicana Restaurant & Bakery', location: {lat:  41.1727, lng: -73.210299}},
 						{title: 'Mi Pueblo Restaurant & Bakery', location: {lat:  41.171315, lng: -73.206972}},
 						{title: 'American Steak House', location: {lat:  41.201269, lng: -73.185896}},
@@ -47,16 +47,16 @@ class App extends Component {
 						infowindow.setContent('<div>' + marker.title + '</div>');
 						infowindow.open(map, marker);
 						infowindow.addListener('closeclick', function(){
-						infowindow.setMarker(null);
+						infowindow.marker = null;
 						});
 						}
 						map.fitBounds(bounds);
 					}
 		
-		for (var i = 0; i < locations.length; i++) {
-			var position = locations[i].location;
-			var title = locations[i].title;
-			var marker = new google.maps.Marker({
+		for (let i = 0; i < locations.length; i++) {
+			let position = locations[i].location;
+			let title = locations[i].title;
+			let marker = new google.maps.Marker({
 			map: map,
 			position: position,
 			title: title,
@@ -64,27 +64,35 @@ class App extends Component {
 			animation: google.maps.Animation.DROP,
 			id: i
 		});
-			markers.push(marker);
+			this.markers.push(marker);
 			bounds.extend(marker.position);
 			marker.addListener('click', function() {
 			populateInfoWindow(this, largeInfowindow);
 		});
+
 		}
 
 
 		})
+
+	}
+
+	filterLocations(query) {
+		this.markers.forEach(marker => {
+			marker.title.toLowerCase().includes(query.toLowerCase()) == true ?
+			marker.setVisible(true) :
+			marker.setVisible(false);
+		});
+		this.setState({query});
 	}
 	
-	filterVeues(query) {
-		console.log(query);
-	}
+
   render() {
     return (
 		<div>
 			<div className='options-box'>
 
-				<input value={this.state.query} onChange={(e) => {this.filterVeues(e.target.value)}}/>
-				<input id='hide-listings' type='button' value='Hide Listings'></input>
+				<input value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
 			</div>
 
 			<div id="map">
