@@ -19,17 +19,17 @@ class App extends Component {
 		])
 				.then(values => {
 			
-				  let google = values[0];
+				  	let google = values[0];
 					this.google = values;
 				    this.markers = [];
 					let map;
 
-					map = new google.maps.Map(document.getElementById('map'), {
+					    map = new google.maps.Map(document.getElementById('map'), {
 						center: {lat: 41.179226, lng: -73.189438},
 						zoom: 13
 					});
 
-					let locations = [
+						this.locations = [
 						{title: 'La Mexicana Restaurant & Bakery', location: {lat:  41.1727, lng: -73.210299}},
 						{title: 'Mi Pueblo Restaurant & Bakery', location: {lat:  41.171315, lng: -73.206972}},
 						{title: 'American Steak House', location: {lat:  41.201269, lng: -73.185896}},
@@ -52,10 +52,11 @@ class App extends Component {
 						}
 						map.fitBounds(bounds);
 					}
+
 		
-		for (let i = 0; i < locations.length; i++) {
-			let position = locations[i].location;
-			let title = locations[i].title;
+		for (let i = 0; i < this.locations.length; i++) {
+			let position = this.locations[i].location;
+			let title = this.locations[i].title;
 			let marker = new google.maps.Marker({
 			map: map,
 			position: position,
@@ -70,20 +71,32 @@ class App extends Component {
 			populateInfoWindow(this, largeInfowindow);
 		});
 
+		this.setState({filterLocations: this.locations});
+
 		}
 
+		   
 
 		})
+	}
 
+	listItemClick = (location) => {
+		let marker = this.markers.filter(m => m.id === location.id)[0];
+		console.log(marker);
+		this.infowindow.setContent(marker.title);
+		this.map.setCenter(marker.position);
+		this.infowindow.open(this.map, marker);
+		this.map.panBy(0, -125);
 	}
 
 	filterLocations(query) {
+		let filt = this.locations.filter(location => location.title.toLowerCase().includes(query.toLowerCase()));
 		this.markers.forEach(marker => {
 			marker.title.toLowerCase().includes(query.toLowerCase()) == true ?
 			marker.setVisible(true) :
 			marker.setVisible(false);
 		});
-		this.setState({query});
+		this.setState({filterLocations: filt, query});
 	}
 	
 
@@ -92,7 +105,15 @@ class App extends Component {
 		<div>
 			<div className='options-box'>
 
-				<input value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
+				<input placeholder="filter content" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
+				<br/>
+				{
+					this.state.filterLocations && this.state.filterLocations.length > 0 && this.state.filterLocations.map((location, index) => (
+						<div key={index} className="sidebar-item" onClick={() => {this.listItemClick(location)}}> 
+						{location.title}
+						</div>
+					))
+				}
 			</div>
 
 			<div id="map">

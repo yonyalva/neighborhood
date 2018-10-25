@@ -16,4 +16,3 @@ export function load_google_maps() {
 
 	});
 }
-
