@@ -1,0 +1,27 @@
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.options-box {
+  display: none;
+}
+
+
+@media screen and (min-width: 800px) {
+.options-box {
+    display: inline-block; 
+}
+
+#map { 
+width: 73%;
+left: 27%;
+}
+
+.header__menu {
+  display: none;
+
+}
+
+}
+

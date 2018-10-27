@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './responsive.css';
 import {load_google_maps} from './components/script'
 
 /*global google*/
@@ -41,20 +41,7 @@ class App extends Component {
 					this.infowindow = new google.maps.InfoWindow();
 					var bounds = new google.maps.LatLngBounds();
 					var markers = [];
-
-					function populateInfoWindow(marker, infowindow){
-						if (infowindow.marker != marker) {
-						infowindow.marker = marker;
-						infowindow.setContent('<div>' + marker.title + '</div>');
-						infowindow.open(this.map, marker);
-						infowindow.addListener('closeclick', function(){
-						infowindow.marker = null;
-						});
-						}
-						this.map.fitBounds(bounds);
-					}
-
-		
+	
 		for (let i = 0; i < this.locations.length; i++) {
 			let position = this.locations[i].location;
 			let title = this.locations[i].title;
@@ -77,7 +64,6 @@ class App extends Component {
 			this.infowindow.setContent(marker.title);
 			this.map.setCenter(marker.position);
 			this.infowindow.open(this.map, marker);
-			this.map.panBy(0, -125);
 		});
 			this.markers.push(marker);
 			bounds.extend(marker.position);
@@ -96,7 +82,6 @@ class App extends Component {
 	this.infowindow.setContent(marker.title);
 	this.map.setCenter(marker.position);
 	this.infowindow.open(this.map, marker);
-	this.map.panBy(0, -125);
 	}
 
 	filterLocations(query) {
@@ -106,6 +91,7 @@ class App extends Component {
 			marker.setVisible(true) :
 			marker.setVisible(false);
 		});
+		this.infowindow.close();
 		this.setState({filterLocations: filt, query});
 	}
 	
@@ -113,9 +99,15 @@ class App extends Component {
   render() {
     return (
 		<div>
-			<div className='options-box'>
+			
+			<a id="menu" class="header__menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z" />
+        </svg>
+    </a>
 
-				<input placeholder="filter content" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
+			<div className='options-box'>
+				<input placeholder="filter restaurants" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
 				<br/>
 				{
 					this.state.filterLocations && this.state.filterLocations.length > 0 && this.state.filterLocations.map((location, index) => (
@@ -129,6 +121,13 @@ class App extends Component {
 			<div id="map">
         
 			</div>
+			<div>
+			<footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+     </footer>
+			</div>
+
+	 
 	 </div>
     );
   }
