@@ -31,24 +31,31 @@ class App extends Component {
 					});
 
 						this.locations = [
-						{title: 'La Mexicana Restaurant & Bakery', id:0, location: {lat:  41.1727, lng: -73.210299}},
-						{title: 'Mi Pueblo Restaurant & Bakery', id:1, location: {lat:  41.171315, lng: -73.206972}},
-						{title: 'American Steak House', id:2, location: {lat:  41.201269, lng: -73.185896}},
-						{title: 'Pantanal', id:3, location: {lat:  41.18697, lng: -73.198079}},
-						{title: 'Terra Brasilis Restaurant', id:4, location: {lat:  41.188444, lng: -73.201293}}
+						{title: 'La Mexicana Restaurant & Bakery', id:0, location: {lat:  41.1727, lng: -73.210299}, photo: 'mexico', street: '1407 Fairfield Ave', city: 'Bridgeport, CT 06605'},
+						{title: 'Mi Pueblo Restaurant & Bakery', id:1, location: {lat:  41.171315, lng: -73.206972}, photo: 'colombia', street: '1222 State St', city: 'Bridgeport, CT 06605'},
+						{title: 'American Steak House', id:2, location: {lat:  41.201269, lng: -73.185896}, photo: 'USA', street: '210 Boston Ave', city: 'Bridgeport, CT 06610'},
+						{title: 'Pantanal', id:3, location: {lat:  41.18697, lng: -73.198079}, photo: 'brazil', street: '215 Frank St', city: 'Bridgeport, CT 06604'},
+						{title: 'Terra Brasilis Restaurant', id:4, location: {lat:  41.188444, lng: -73.201293}, photo: 'brazil', street: '1282 North Ave', city: 'Bridgeport, CT 06604'}
 					];
 
-					this.infowindow = new google.maps.InfoWindow();
-					var bounds = new google.maps.LatLngBounds();
-					var markers = [];
+				this.infowindow = new google.maps.InfoWindow();
+					const bounds = new google.maps.LatLngBounds();
+					//fetch link for unplash api
+					this.foto = 'https://api.unsplash.com/search/photos?page=1&query=';
 	
 		for (let i = 0; i < this.locations.length; i++) {
 			let position = this.locations[i].location;
 			let title = this.locations[i].title;
+			let photo = this.locations[i].photo;
+			let street = this.locations[i].street;
+			let city = this.locations[i].city;
 			let marker = new google.maps.Marker({
 			map: this.map,
 			position: position,
 			title: title,
+			photo: photo,
+			street: street,
+			city: city,
 			icon: {url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"},		
 			animation: google.maps.Animation.DROP,
 			id: i
@@ -61,7 +68,17 @@ class App extends Component {
 		});
 		
 		google.maps.event.addListener(marker, 'click', () => {
-			this.infowindow.setContent(marker.title);
+			// unsplush api
+			fetch(this.foto + marker.photo, {
+				headers: {
+					Authorization: 'Client-ID 51ad43d66995eda4105dc52c08c9031cb3c5c6f22ef58de8d709c2c10871b3e4'
+				}
+			}).then(response => response.json())
+			.then((data) => {
+				const firstImage = data.results[0];
+				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+			})
+			// end of unsplush api
 			this.map.setCenter(marker.position);
 			this.infowindow.open(this.map, marker);
 		});
@@ -79,7 +96,17 @@ class App extends Component {
 	if (marker.getAnimation() !== null) {marker.setAnimation(null);}
 			else {marker.setAnimation(google.maps.Animation.BOUNCE);}
 			setTimeout(() => {marker.setAnimation(null)}, 1500);
-	this.infowindow.setContent(marker.title);
+	// unsplush api
+	fetch(this.foto + marker.photo, {
+		headers: {
+			Authorization: 'Client-ID 51ad43d66995eda4105dc52c08c9031cb3c5c6f22ef58de8d709c2c10871b3e4'
+		}
+	}).then(response => response.json())
+	.then((data) => {
+		const firstImage = data.results[0];
+		this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+	})
+	// end of unsplush api
 	this.map.setCenter(marker.position);
 	this.infowindow.open(this.map, marker);
 	}
@@ -87,25 +114,20 @@ class App extends Component {
 	filterLocations(query) {
 		let filt = this.locations.filter(location => location.title.toLowerCase().includes(query.toLowerCase()));
 		this.markers.forEach(marker => {
-			marker.title.toLowerCase().includes(query.toLowerCase()) == true ?
+			marker.title.toLowerCase().includes(query.toLowerCase()) === true ?
 			marker.setVisible(true) :
 			marker.setVisible(false);
 		});
 		this.infowindow.close();
 		this.setState({filterLocations: filt, query});
 	}
-	
+
+
 
   render() {
     return (
 		<div>
-			
-			<a id="menu" class="header__menu">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z" />
-        </svg>
-    </a>
-
+					
 			<div className='options-box'>
 				<input placeholder="filter restaurants" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
 				<br/>
@@ -123,8 +145,8 @@ class App extends Component {
 			</div>
 			<div>
 			<footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
-     </footer>
+    			Maps by <strong>Google</strong>. Images by <strong>unsplash</strong>
+     		</footer>
 			</div>
 
 	 

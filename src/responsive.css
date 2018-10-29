@@ -3,24 +3,30 @@
   flex-wrap: wrap;
 }
 
-.options-box {
-  display: none;
-}
-
-
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 600px) {
 .options-box {
     display: inline-block; 
+    width: 23%;
+    padding: 1em;
+    z-index: 10;
+
 }
+
+.sidebar-item {
+  padding-left: 1em;
+  font-size: 1em;
+  }
 
 #map { 
 width: 73%;
 left: 27%;
 }
 
-.header__menu {
-  display: none;
+/* for unsplash api */
 
+img {
+  width: 100px;
+  height: 100px;
 }
 
 }
