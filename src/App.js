@@ -134,7 +134,7 @@ class App extends Component {
 				<br/>
 				{
 					this.state.filterLocations && this.state.filterLocations.length > 0 && this.state.filterLocations.map((location, index) => (
-						<div tabIndex={index + 4} key={index} className="sidebar-item"  onKeyPress={event => {if (event.key === "Enter") {this.listItemClick(location)}}} onClick={() => {this.listItemClick(location)}}> 
+						<div role="listitem" tabIndex={index + 4} key={index} className="sidebar-item"  onKeyPress={event => {if (event.key === "Enter") {this.listItemClick(location)}}} onClick={() => {this.listItemClick(location)}}> 
 						{location.title} 
 						</div>
 					))
