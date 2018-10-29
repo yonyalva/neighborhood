@@ -29,7 +29,7 @@ class App extends Component {
 						center: {lat: 41.179226, lng: -73.189438},
 						zoom: 13
 					});
-
+						// restaurant list
 						this.locations = [
 						{title: 'La Mexicana Restaurant & Bakery', id:0, location: {lat:  41.1727, lng: -73.210299}, photo: 'mexico', street: '1407 Fairfield Ave', city: 'Bridgeport, CT 06605'},
 						{title: 'Mi Pueblo Restaurant & Bakery', id:1, location: {lat:  41.171315, lng: -73.206972}, photo: 'colombia', street: '1222 State St', city: 'Bridgeport, CT 06605'},
@@ -67,6 +67,7 @@ class App extends Component {
 			setTimeout(() => {marker.setAnimation(null)}, 1500);
 		});
 		
+		// marker click
 		google.maps.event.addListener(marker, 'click', () => {
 			// unsplush api
 			fetch(this.foto + marker.photo, {
@@ -79,6 +80,7 @@ class App extends Component {
 				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt=" + marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 			})
 			// end of unsplush api
+			// end of marker click
 			this.map.setCenter(marker.position);
 			this.infowindow.open(this.map, marker);
 		});
@@ -90,7 +92,7 @@ class App extends Component {
 	}
 	
 	
-
+	//list item click
 	listItemClick = (location) => {
 	let marker = this.markers.filter(m => m.id === location.id)[0];
 	if (marker.getAnimation() !== null) {marker.setAnimation(null);}
@@ -111,6 +113,7 @@ class App extends Component {
 	this.infowindow.open(this.map, marker);
 	}
 
+	//filter restaurants function
 	filterLocations(query) {
 		let filt = this.locations.filter(location => location.title.toLowerCase().includes(query.toLowerCase()));
 		this.markers.forEach(marker => {
