@@ -22,7 +22,7 @@ class App extends Component {
 				.then(values => {
 			
 				  	let google = values[0];
-					this.google = values;
+					this.google = google;
 				    this.markers = [];
 
 					    this.map = new google.maps.Map(document.getElementById('map'), {
@@ -76,7 +76,7 @@ class App extends Component {
 			}).then(response => response.json())
 			.then((data) => {
 				const firstImage = data.results[0];
-				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt=" + marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 			})
 			// end of unsplush api
 			this.map.setCenter(marker.position);
@@ -104,7 +104,7 @@ class App extends Component {
 	}).then(response => response.json())
 	.then((data) => {
 		const firstImage = data.results[0];
-		this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+		this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 	})
 	// end of unsplush api
 	this.map.setCenter(marker.position);
@@ -122,19 +122,17 @@ class App extends Component {
 		this.setState({filterLocations: filt, query});
 	}
 
-
-
   render() {
     return (
 		<div>
 					
 			<div className='options-box'>
-				<input placeholder="filter restaurants" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
+				<input tabIndex="3" placeholder="filter restaurants" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
 				<br/>
 				{
 					this.state.filterLocations && this.state.filterLocations.length > 0 && this.state.filterLocations.map((location, index) => (
-						<div key={index} className="sidebar-item"  onClick={() => {this.listItemClick(location)}}> 
-						{location.title}
+						<div tabIndex={index + 4} key={index} className="sidebar-item"  onKeyPress={event => {if (event.key === "Enter") {this.listItemClick(location)}}} onClick={() => {this.listItemClick(location)}}> 
+						{location.title} 
 						</div>
 					))
 				}
