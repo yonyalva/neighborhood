@@ -23,7 +23,7 @@ To get started:
 ## Description
 
 * To see information about the restaurant, either click on a marker on the map or on the name of the restaurant on the sidebar
-* To filter restaurnts, type in the "filter restaurants" input field
+* To filter restaurants, type in the "filter restaurants" input field
 
 ## Attributions
 
