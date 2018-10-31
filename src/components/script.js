@@ -10,4 +10,5 @@ export function load_google_maps() {
 		script.async = true;
 		document.body.appendChild(script);
 	});
+	
 }

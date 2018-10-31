@@ -33,10 +33,10 @@
     <div id="root">
     </div>
     <script>
-//Google Mpas error handling 
-    window.gm_authFailure = function() {
-      alert("Google Maps failed to load! Please try again later");
-    }
-    </script>
+      //Google Mpas error handling 
+          window.gm_authFailure = function() {
+            document.getElementById("map").innerHTML = "<h3 style='text-align: center; padding: 10px; color:red'>Google Maps failed to load! Please try later.</h3><h3 style='text-align: center; padding: 10px; color:red'>Google Maps failed to load! Please try later.</h3><h3 style='text-align: center; padding: 10px; color:red'>Google Maps failed to load! Please try later.</h3>";
+          }
+      </script>
   </body>
 </html>
