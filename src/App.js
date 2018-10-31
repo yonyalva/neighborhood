@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import './responsive.css';
-import {load_google_maps, gm_authFailure} from './components/script'
+import {load_google_maps, gm_authFailure} from './components/script';
+import {locations} from './components/locations';
 
 /*global google*/
 
@@ -29,20 +30,14 @@ class App extends Component {
 						center: {lat: 41.179226, lng: -73.189438},
 						zoom: 13
 					});
-						// restaurant list
-						this.locations = [
-						{title: 'La Mexicana Restaurant & Bakery', id:0, location: {lat:  41.1727, lng: -73.210299}, photo: 'mexico', street: '1407 Fairfield Ave', city: 'Bridgeport, CT 06605'},
-						{title: 'Mi Pueblo Restaurant & Bakery', id:1, location: {lat:  41.171315, lng: -73.206972}, photo: 'colombia', street: '1222 State St', city: 'Bridgeport, CT 06605'},
-						{title: 'American Steak House', id:2, location: {lat:  41.201269, lng: -73.185896}, photo: 'USA', street: '210 Boston Ave', city: 'Bridgeport, CT 06610'},
-						{title: 'Pantanal', id:3, location: {lat:  41.18697, lng: -73.198079}, photo: 'brazil', street: '215 Frank St', city: 'Bridgeport, CT 06604'},
-						{title: 'Terra Brasilis Restaurant', id:4, location: {lat:  41.188444, lng: -73.201293}, photo: 'brazil', street: '1282 North Ave', city: 'Bridgeport, CT 06604'}
-					];
+						// restaurant list from /components/locations.js
+						this.locations = locations;
 
-				this.infowindow = new google.maps.InfoWindow();
+					this.infowindow = new google.maps.InfoWindow();
 					const bounds = new google.maps.LatLngBounds();
 					//fetch link for unplash api
 					this.foto = 'https://api.unsplash.com/search/photos?page=1&query=';
-	
+				
 		for (let i = 0; i < this.locations.length; i++) {
 			let position = this.locations[i].location;
 			let title = this.locations[i].title;
@@ -77,10 +72,11 @@ class App extends Component {
 			}).then(response => response.json())
 			.then((data) => {
 				if (data.results === undefined) {
-					return this.infowindow.setContent("<div style='float:left'><img src='unsplash.jpg' alt='no image'></div></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+					var firstImage = 'unsplash.jpg';
+				 } else {
+					var firstImage = data.results[0].urls.small;
 				 }
-				 const firstImage = data.results[0];
-					this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+				 this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 			})
 			// end of unsplush api
 			// end of marker click
@@ -109,14 +105,15 @@ class App extends Component {
 	}).then(response => response.json())
 	.then((data) => {
 		if (data.results === undefined) {
-			return this.infowindow.setContent("<div style='float:left'><img src='unsplash.jpg' alt='no image'></div></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+			var firstImage = 'unsplash.jpg';
+		 } else {
+			var firstImage = data.results[0].urls.small;
 		 }
-		 const firstImage = data.results[0];
-			this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+			this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 	})
 	// end of unsplush api
-	this.map.setCenter(marker.position);
-	this.infowindow.open(this.map, marker);
+	   this.map.setCenter(marker.position);
+	   this.infowindow.open(this.map, marker);
 	}
 
 	//filter restaurants function
