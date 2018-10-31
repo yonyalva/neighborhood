@@ -76,8 +76,11 @@ class App extends Component {
 				}
 			}).then(response => response.json())
 			.then((data) => {
-				const firstImage = data.results[0];
-				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt=" + marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+				if (data.results === undefined) {
+					return this.infowindow.setContent("<div style='float:left'><img src='unsplash.jpg' alt='no image'></div></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+				 }
+				 const firstImage = data.results[0];
+					this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 			})
 			// end of unsplush api
 			// end of marker click
@@ -105,22 +108,11 @@ class App extends Component {
 		}
 	}).then(response => response.json())
 	.then((data) => {
-		// var firstImage = data.reults[0] != undefined ? data.results[0] :'not definito';
-		if (data !== "undefined") {
-			// let firstImage = 'img/unsplash.jpg';
-			// console.log(firstImage);
-			this.infowindow.setContent("<div style='float:left'><img src='unsplash.jpg' alt='no image'></div></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
-		}
-			// var firstImage = data.reults[0];
-			// this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
-		  
-
-		// var firstImage;
-		// firstImage = (data.reults[0] != undefined) ? data.reults[0] : 'none';
-			// var firstImage = data.reults[0];
-		//	this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
-		// firstImage = data.results[0] != undefined ? firstImage :'not definito';
-		// this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+		if (data.results === undefined) {
+			return this.infowindow.setContent("<div style='float:left'><img src='unsplash.jpg' alt='no image'></div></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+		 }
+		 const firstImage = data.results[0];
+			this.infowindow.setContent("<div style='float:left'><img src=" + firstImage.urls.small + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 	})
 	// end of unsplush api
 	this.map.setCenter(marker.position);
