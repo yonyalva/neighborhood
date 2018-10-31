@@ -20,6 +20,13 @@ To get started:
 * install all project dependencies with `npm install`
 * start the development server with `npm start`
 
+For production, run the following commands:
+
+* npm run build
+* npm install -g serve
+* serve -s build
+* visit localhost:5000
+
 ## Description
 
 * To see information about the restaurant, either click on a marker on the map or on the name of the restaurant on the sidebar
