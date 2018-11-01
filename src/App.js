@@ -153,7 +153,7 @@ class App extends Component {
 				}
 			</div>
 
-			<div id="map">
+			<div id="map" role="application" aria-label="Map with restaurant markers">
         
 			</div>
 			<div>
