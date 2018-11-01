@@ -17,7 +17,6 @@ class App extends Component {
 
 	componentDidMount() {
 		let googleMapsPromise = load_google_maps ();
-		this.locations = locations;
 		Promise.all([
 			googleMapsPromise
 		])
@@ -30,13 +29,13 @@ class App extends Component {
 						center: {lat: 41.179226, lng: -73.189438},
 						zoom: 13
 					});
-						// restaurant list from /components/locations.js
-					//	this.locations = locations;
+					// restaurant list from /components/locations.js
+					this.locations = locations;
 
 					this.infowindow = new google.maps.InfoWindow();
 					const bounds = new google.maps.LatLngBounds();
 					//fetch link for unplash api
-					this.foto = 'https://api.unsplash5.com/search/photos?page=1&query=';
+					this.foto = 'https://api.unsplash.com/search/photos?page=1&query=';
 
 		for (let i = 0; i < this.locations.length; i++) {
 			let position = this.locations[i].location;
@@ -69,18 +68,21 @@ class App extends Component {
 				headers: {
 					Authorization: 'Client-ID 51ad43d66995eda4105dc52c08c9031cb3c5c6f22ef58de8d709c2c10871b3e4'
 				}
-			}).then(response => response.json())
+			}).then(response => {
+				if (response.ok) {
+					return response.json();
+				  } else {
+					throw new Error('Something went wrong');
+				  }})
 			.then((data) => {
-				if (data.results === undefined) {
-					var firstImage = 'unsplash.jpg';
-					} else {
-					var firstImage = data.results[0].urls.small;
-					}
-					this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
-			})
+				var firstImage = data.results[0].urls.small;
+				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+			}).catch((error) => {
+				let firstImage = 'unsplash.jpg';
+				this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+			  });
 			// end of unsplush api
 			// end of marker click
-			// this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 			this.map.setCenter(marker.position);
 			this.infowindow.open(this.map, marker);
 		});
@@ -92,10 +94,7 @@ class App extends Component {
 
 		})
 	}
-	
-
-
-	
+		
 	//list item click
 	listItemClick = (location) => {
 	let marker = this.markers.filter(m => m.id === location.id)[0];
@@ -105,10 +104,9 @@ class App extends Component {
 	// unsplush api
 	fetch(this.foto + marker.photo, {
 		headers: {
-			Authorization: 'Client-ID 51ad43d66995eda4105dc52c08c9031cb3c5c6f22ef58de8d709c2c10871b3e'
+			Authorization: 'Client-ID 51ad43d66995eda4105dc52c08c9031cb3c5c6f22ef58de8d709c2c10871b3e4'
 		}
 	})
-	// .then(response => response.json())
 	.then(response => {
 		if (response.ok) {
 			return response.json();
@@ -116,14 +114,10 @@ class App extends Component {
 			throw new Error('Something went wrong');
 		  }})
 	.then((data) => {
-		if (data.results === undefined) {
-			var firstImage = 'unsplash.jpg';
-		 } else {
-			var firstImage = data.results[0].urls.small;
-		 }
-		 this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
+		let firstImage = data.results[0].urls.small;
+		this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 	}).catch((error) => {
-		var firstImage = 'unsplash.jpg';
+		let firstImage = 'unsplash.jpg';
 		this.infowindow.setContent("<div style='float:left'><img src=" + firstImage + " alt="+ marker.photo + "></div><div style='float:right; padding-left: 10px;'><b>" + marker.title + "</b><br/>" + marker.street + "<br/>" + marker.city + "</div>");
 	  });
 	// end of unsplush api
