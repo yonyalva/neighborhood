@@ -17,11 +17,9 @@ class App extends Component {
 
 	componentDidMount() {
 		let googleMapsPromise = load_google_maps ();
-		Promise.all([
-			googleMapsPromise
-		])
-				.then(values => {
-
+	    Promise.all([
+		 googleMapsPromise
+			 ]).then(values => {
 				  	let google = values[0];
 					this.google = google;
 					this.markers = [];
@@ -72,7 +70,7 @@ class App extends Component {
 				if (response.ok) {
 					return response.json();
 				  } else {
-					throw new Error('Something went wrong');
+					throw new Error();
 				  }})
 			.then((data) => {
 				var firstImage = data.results[0].urls.small;
@@ -90,9 +88,9 @@ class App extends Component {
 			bounds.extend(marker.position);
 			this.setState({filterLocations: this.locations});
 		}
-	
-
-		})
+		}).catch((error) => {
+			alert('hi there');
+		  })
 	}
 		
 	//list item click
@@ -111,7 +109,7 @@ class App extends Component {
 		if (response.ok) {
 			return response.json();
 		  } else {
-			throw new Error('Something went wrong');
+			throw new Error();
 		  }})
 	.then((data) => {
 		let firstImage = data.results[0].urls.small;
@@ -142,7 +140,7 @@ class App extends Component {
 		<div>
 					
 			<div className='options-box'>
-				<input tabIndex="3" placeholder="filter restaurants" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
+				<input role="search" aria-label="search for restaurants" tabIndex="3" placeholder="filter restaurants" value={this.state.query} onChange={(e) => {this.filterLocations(e.target.value)}}/>
 				<br/>
 				{
 					this.state.filterLocations && this.state.filterLocations.length > 0 && this.state.filterLocations.map((location, index) => (
